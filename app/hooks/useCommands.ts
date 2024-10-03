@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback } from 'react';
 
 export function useCommands(language: 'en' | 'es') {
   const commands = {
@@ -80,7 +80,7 @@ export function useCommands(language: 'en' | 'es') {
         output: "Guardando CV como PDF... ¡CV guardado con éxito! Puedes encontrarlo en tu carpeta de descargas."
       }
     }
-  }
+  };
 
   const commandRegexes = {
     about: /^(about|sobre)$/i,
@@ -90,7 +90,7 @@ export function useCommands(language: 'en' | 'es') {
     contact: /^(contact|contacto)$/i,
     clear: /^(clear|clear)$/i,
     savecv: /^(save cv|CV)$/i
-  }
+  };
 
   const welcomeMessage = {
     en: [
@@ -103,7 +103,7 @@ export function useCommands(language: 'en' | 'es') {
       "Comandos disponibles: " + Object.keys(commands).map(cmd => commands[cmd as keyof typeof commands].es.command).join(', '),
       "Escribe un comando para explorar el portafolio.",
     ]
-  }
+  };
 
   const findCommand = useCallback((input: string): string | null => {
     for (const [command, regex] of Object.entries(commandRegexes)) {
@@ -115,4 +115,4 @@ export function useCommands(language: 'en' | 'es') {
   }, [])
 
   return { commands, commandRegexes, welcomeMessage, findCommand }
-}
+};
