@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { commandData, findCommand } from '../services/commandHandlers'
+import { X } from 'lucide-react' // Add this import for the X icon
 
 const Terminal = ({ language, toggleTerminal }: { language: 'en' | 'es', toggleTerminal: () => void }) => {
   const [input, setInput] = useState('')
