@@ -1,3 +1,4 @@
+'use client'
 import { useState, useRef, useEffect } from 'react'
 import Terminal from './components/Terminal'
 import SocialLinks from './components/SocialLinks'
