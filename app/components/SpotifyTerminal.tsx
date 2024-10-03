@@ -1,4 +1,4 @@
-"use client" // Add this line at the top
+'use client' // Add this line at the top
 
 import { useState, useEffect } from 'react';
 
