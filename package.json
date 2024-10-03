@@ -13,8 +13,8 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "html2pdf.js": "^0.10.1",
-    "lucide-react": "^0.10.1"
+    "html2pdf.js": "latest",
+    "lucide-react": "latest"
   },
   "devDependencies": {
     "eslint": "latest",
