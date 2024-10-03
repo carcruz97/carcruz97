@@ -2,10 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['your-domain.com'], // Update this to allow loading images from specific domains
+    domains: ['raw.githubusercontent.com'],
   },
-  // Additional configuration options can go here
 }
 
 module.exports = nextConfig
-
