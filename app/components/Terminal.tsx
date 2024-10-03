@@ -1,3 +1,4 @@
+"use client" // Add this line at the top
 import { useState, useRef, useEffect } from 'react'
 import { commandData, findCommand } from '../services/commandHandlers'
 
@@ -57,7 +58,7 @@ const Terminal = ({ language, toggleTerminal }: { language: 'en' | 'es', toggleT
       </div>
     </div>
   )
-}
+};
 
 export default Terminal
 
