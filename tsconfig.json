@@ -2,9 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["components/*"] // Change to point specifically to the components directory
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["app/**/*", "components/**/*", "**/*.ts", "**/*.tsx"], // Ensure both app and components are included
   "exclude": ["node_modules"]
 }
+
