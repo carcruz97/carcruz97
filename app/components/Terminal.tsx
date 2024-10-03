@@ -1,12 +1,20 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
-import { commandData, findCommand } from '../services/commandHandlers'
-import { X } from 'lucide-react' // Add this import for the X icon
+import { X } from 'lucide-react'
+import { useRef, useEffect } from 'react'
+import { welcomeMessage } from '../services/commandData'
 
-const Terminal = ({ language, toggleTerminal }: { language: 'en' | 'es', toggleTerminal: () => void }) => {
-  const [input, setInput] = useState('')
-  const [output, setOutput] = useState<string[]>([])
+interface TerminalProps {
+  output: string[]
+  input: string
+  setInput: (input: string) => void
+  handleSubmit: (e: React.FormEvent) => void
+  onClose: () => void
+  language: 'en' | 'es'
+}
+
+export default function Terminal({ output, input, setInput, handleSubmit, onClose, language }: TerminalProps) {
   const terminalRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -14,52 +22,54 @@ const Terminal = ({ language, toggleTerminal }: { language: 'en' | 'es', toggleT
     }
   }, [output])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const trimmedInput = input.trim().toLowerCase()
-    let newOutput: string[] = []
-
-    const matchedCommand = findCommand(trimmedInput, language)
-
-    if (matchedCommand === 'clear') {
-      newOutput = []
-    } else if (matchedCommand) {
-      const commandOutput = commandData[matchedCommand][language]
-      newOutput = [...output, `$ ${commandOutput.command}`, commandOutput.output]
-    } else {
-      newOutput = [...output, `$ ${input}`, language === 'en' ? `Command not found: ${input}.` : `Comando no encontrado: ${input}.`]
-    }
-
-    setOutput(newOutput)
-    setInput('')
-  }
-
   return (
-    <div className="terminal-wrapper">
-      <div className="terminal-header">
-        <div className="terminal-buttons">
-          <div className="button-red"></div>
-          <div className="button-yellow"></div>
-          <div className="button-green"></div>
+    <div className="w-full max-w-md mx-auto bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20">
+      <div className="bg-black bg-opacity-30 p-2 flex items-center">
+        <div className="flex space-x-2">
+          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
-        <span className="terminal-title">The Carmen's Forest</span>
-        <button onClick={toggleTerminal} className="close-button">
-          <X />
+        <div className="flex-grow text-center">
+          <span className="text-sm text-white font-medium">The Carmen's Forest</span>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-white hover:text-red-400 transition-colors"
+          aria-label={language === 'en' ? "Close Terminal" : "Cerrar Terminal"}
+        >
+          <X className="w-5 h-5" />
         </button>
       </div>
-
-      <div ref={terminalRef} className="terminal-output">
-        {output.map((line, index) => (
-          <div key={index} className="terminal-line">{line}</div>
+      <div className="bg-black bg-opacity-30 text-white p-2 sm:p-3 md:p-4 text-xs sm:text-sm">
+        {welcomeMessage[language].map((line, index) => (
+          <div key={index} className="mb-1 sm:mb-2 font-bold text-shadow">
+            {line}
+          </div>
         ))}
-        <form onSubmit={handleSubmit} className="terminal-input-form">
-          <span className="terminal-prompt">$</span>
-          <input type="text" value={input} onChange={(e) => setInput(e.target.value)} className="terminal-input" />
+      </div>
+      <div 
+        ref={terminalRef}
+        className="bg-black bg-opacity-30 text-white p-2 sm:p-3 md:p-4 text-xs sm:text-sm h-64 sm:h-80 md:h-96 overflow-y-auto"
+      >
+        {output.map((line, index) => (
+          <div key={index} className="mb-1 sm:mb-2 font-bold text-shadow">
+            {line}
+          </div>
+        ))}
+        <form onSubmit={handleSubmit} className="flex items-center mt-2">
+          <span className="mr-2 font-bold text-shadow">$</span>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="flex-grow bg-transparent outline-none font-bold text-shadow"
+            autoFocus
+            ref={inputRef}
+            aria-label={language === 'en' ? "Enter command" : "Ingrese el comando"}
+          />
         </form>
       </div>
     </div>
   )
-};
-
-export default Terminal
-
+}
