@@ -78,7 +78,7 @@ const SnakeGame = ({ onClose }: { onClose: () => void }) => {
       </div>
     </div>
   )
-}
+};
 
 export default SnakeGame
 
