@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Linkedin, FileText, Twitter, Bot, Download, Github, CalendarClock, Terminal, Gamepad2, Music } from 'lucide-react'
 
-const DynamicPortfolioContent = dynamic(() => import('../components/PortfolioContent'), { ssr: false });
+const DynamicPortfolioContent = dynamic(() => import('@/PortfolioContent'), { ssr: false });
 
 export default function Page() {
   return (
