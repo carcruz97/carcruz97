@@ -1,4 +1,4 @@
-"use client" // Add this line at the top
+'use client'
 import { useState, useRef, useEffect } from 'react'
 import { commandData, findCommand } from '../services/commandHandlers'
 
