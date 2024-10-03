@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react';
 
 export function useLanguage() {
   const [language, setLanguage] = useState<'en' | 'es'>('en')
@@ -8,4 +8,4 @@ export function useLanguage() {
   }, [])
 
   return { language, toggleLanguage }
-}
+};
