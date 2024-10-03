@@ -1,5 +1,5 @@
-import { useCallback, useRef } from 'react'
-import html2pdf from 'html2pdf.js'
+import { useCallback, useRef } from 'react';
+import html2pdf from 'html2pdf.js';
 
 export function usePDF() {
   const cvRef = useRef<HTMLDivElement>(null)
@@ -11,4 +11,4 @@ export function usePDF() {
   }, [language])
 
   return { generatePDF, cvRef }
-}
+};
