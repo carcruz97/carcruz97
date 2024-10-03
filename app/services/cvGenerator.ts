@@ -1,13 +1,14 @@
 import html2pdf from 'html2pdf.js'
+import { cvData } from './cvData'
 
-export const generatePDF = (cvRef: any, language: 'en' | 'es') => {
-  const options = {
-    margin: 0,
-    filename: language === 'en' ? 'Carmen_Cruzado_CV_EN.pdf' : 'Carmen_Cruzado_CV_ES.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-  }
+export const generateCV = (language: 'en' | 'es') => {
+  const cv = document.createElement('div')
+  cv.innerHTML = `
+    <h2>${cvData[language].name}</h2>
+    <p>${cvData[language].title}</p>
+    <p>${cvData[language].experience}</p>
+    <p>${cvData[language].education}</p>
+  `
 
-  html2pdf().from(cvRef.current).set(options).save()
+  html2pdf().from(cv).save(`cv_${language}.pdf`)
 }
