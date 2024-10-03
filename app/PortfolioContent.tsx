@@ -4,11 +4,11 @@ import React, { useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Linkedin, FileText, Twitter, Bot, Download, Github, CalendarClock, Terminal, X, Gamepad2, Music } from 'lucide-react'
-import { UKFlag, SpainFlag } from '@/Flags'
-import { SnakeGame } from '@/SnakeGame'
-import { SpotifyTerminal } from '@/SpotifyTerminal'
-import { useCommands } from '@/hooks/useCommands'
-import { generatePDF } from '@/utils/generatePDF'
+import { UKFlag, SpainFlag } from 'Flags'
+import { SnakeGame } from 'SnakeGame'
+import { SpotifyTerminal } from 'SpotifyTerminal'
+import { useCommands } from 'useCommands'
+import { generatePDF } from 'generatePDF'
 
 export default function PortfolioContent() {
   const [language, setLanguage] = useState<'en' | 'es'>('en')
