@@ -1,4 +1,4 @@
-"use client" // Add this line at the top
+'use client'
 import Image from 'next/image'
 import { cvData } from '../services/cvData'
 
