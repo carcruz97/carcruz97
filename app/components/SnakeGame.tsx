@@ -1,84 +1,138 @@
 'use client'
+import { useState, useEffect } from 'react'
+import { X } from 'lucide-react'
 
-import { useEffect, useState } from 'react'
+interface SnakeGameProps {
+  onClose: () => void
+  language: 'en' | 'es'
+}
 
-const SnakeGame = ({ onClose }: { onClose: () => void }) => {
-  const [snake, setSnake] = useState([[0, 0]])
-  const [food, setFood] = useState([Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)])
-  const [direction, setDirection] = useState<[number, number]>([0, 1])
+export default function SnakeGame({ onClose, language }: SnakeGameProps) {
+  const [snake, setSnake] = useState<number[][]>([[0, 0]])
+  const [food, setFood] = useState<number[]>([2, 2])
+  const [direction, setDirection] = useState<'UP' | 'DOWN' | 'LEFT' | 'RIGHT'>('RIGHT')
   const [gameOver, setGameOver] = useState(false)
-
-  const moveSnake = () => {
-    setSnake(prevSnake => {
-      const head = prevSnake[0]
-      const newHead = [head[0] + direction[0], head[1] + direction[1]]
-
-      if (newHead[0] < 0 || newHead[0] >= 20 || newHead[1] < 0 || newHead[1] >= 20 || prevSnake.slice(1).some(segment => segment[0] === newHead[0] && segment[1] === newHead[1])) {
-        setGameOver(true)
-        return prevSnake
-      }
-
-      const newSnake = [newHead, ...prevSnake]
-      if (newHead[0] === food[0] && newHead[1] === food[1]) {
-        setFood([Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)])
-      } else {
-        newSnake.pop()
-      }
-
-      return newSnake
-    })
-  }
+  const [level, setLevel] = useState(1)
+  const [score, setScore] = useState(0)
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
-        case 'ArrowUp':
-          setDirection([-1, 0])
-          break
-        case 'ArrowDown':
-          setDirection([1, 0])
-          break
-        case 'ArrowLeft':
-          setDirection([0, -1])
-          break
-        case 'ArrowRight':
-          setDirection([0, 1])
-          break
+        case 'ArrowUp': setDirection('UP'); break
+        case 'ArrowDown': setDirection('DOWN'); break
+        case 'ArrowLeft': setDirection('LEFT'); break
+        case 'ArrowRight': setDirection('RIGHT'); break
       }
     }
 
-    const interval = setInterval(moveSnake, 200)
-    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [])
 
-    return () => {
-      clearInterval(interval)
-      window.removeEventListener('keydown', handleKeyDown)
+  useEffect(() => {
+    if (!gameOver) {
+      const moveSnake = setInterval(() => {
+        setSnake(prevSnake => {
+          const newSnake = [...prevSnake]
+          const head = [...newSnake[0]]
+
+          switch (direction) {
+            case 'UP': head[0] = (head[0] - 1 + 5) % 5; break
+            case 'DOWN': head[0] = (head[0] + 1) % 5; break
+            case 'LEFT': head[1] = (head[1] - 1 + 5) % 5; break
+            case 'RIGHT': head[1] = (head[1] + 1) % 5; break
+          }
+
+          if (head[0] === food[0] && head[1] === food[1]) {
+            setFood([Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)])
+            setScore(prevScore => {
+              const newScore = prevScore + 1
+              if (newScore % 5 === 0 && level < 3) {
+                setLevel(prevLevel => prevLevel + 1)
+              }
+              return newScore
+            })
+          } else {
+            newSnake.pop()
+          }
+
+          if (newSnake.some(segment => segment[0] === head[0] && segment[1] === head[1])) {
+            setGameOver(true)
+            return prevSnake
+          }
+
+          newSnake.unshift(head)
+          return newSnake
+        })
+      }, 500 - (level - 1) * 100)
+
+      return () => clearInterval(moveSnake)
     }
-  }, [direction, food])
+  }, [direction, food, gameOver, level])
 
-  if (gameOver) {
-    return (
-      <div className="game-over">
-        <h2>Game Over</h2>
-        <button onClick={onClose}>Close</button>
-      </div>
-    )
+  const resetGame = () => {
+    setSnake([[0, 0]])
+    setFood([2, 2])
+    setDirection('RIGHT')
+    setGameOver(false)
+    setLevel(1)
+    setScore(0)
   }
 
   return (
-    <div className="snake-game">
-      <div className="grid">
-        {Array.from({ length: 20 }).map((_, row) =>
-          <div key={row} className="row">
-            {Array.from({ length: 20 }).map((_, col) =>
-              <div key={col} className={`cell ${snake.some(segment => segment[0] === row && segment[1] === col) ? 'snake' : ''} ${food[0] === row && food[1] === col ? 'food' : ''}`}></div>
-            )}
+    <div className="w-full max-w-md mx-auto bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20 font-mono">
+      <div className="bg-black bg-opacity-30 p-2 flex items-center">
+        <div className="flex space-x-2">
+          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+        </div>
+        <div className="flex-grow text-center">
+          <span className="text-sm text-white font-medium">
+            {language === 'en' ? 'Snake Game' : 'Juego de la Serpiente'}
+          </span>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-white hover:text-red-400 transition-colors"
+          aria-label={language === 'en' ? "Close Snake Game" : "Cerrar Juego de la Serpiente"}
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      <div className="bg-black bg-opacity-30 text-white p-4 text-sm">
+        <div className="mb-4">
+          <p>{language === 'en' ? 'Level' : 'Nivel'}: {level}</p>
+          <p>{language === 'en' ? 'Score' : 'Puntuación'}: {score}</p>
+        </div>
+        <div className="grid grid-cols-5 gap-1 mb-4">
+          {Array(5).fill(null).map((_, rowIndex) => (
+            Array(5).fill(null).map((_, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`w-full pb-[100%] relative ${
+                  snake.some(([r, c]) => r === rowIndex && c === colIndex)
+                    ? 'bg-green-500'
+                    : food[0] === rowIndex && food[1] === colIndex
+                    ? 'bg-red-500'
+                    : 'bg-gray-800'
+                }`}
+              />
+            ))
+          ))}
+        </div>
+        {gameOver && (
+          <div className="text-center">
+            <p className="mb-2">{language === 'en' ? 'Game Over!' : '¡Juego Terminado!'}</p>
+            <button
+              onClick={resetGame}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
+              {language === 'en' ? 'Play Again' : 'Jugar de Nuevo'}
+            </button>
           </div>
         )}
       </div>
     </div>
   )
-};
-
-export default SnakeGame
-
+}
