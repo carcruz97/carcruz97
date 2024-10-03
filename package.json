@@ -2,7 +2,6 @@
   "name": "carmen-portfolio",
   "version": "1.0.0",
   "description": "Carmen Cruzado's portfolio website",
-  "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,9 +18,6 @@
   "devDependencies": {
     "eslint": "latest",
     "eslint-config-next": "latest"
-  },
-  "keywords": [],
-  "author": "Carmen Cruzado",
-  "license": "ISC"
+  }
 }
 
