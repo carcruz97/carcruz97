@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { X } from 'lucide-react'
-import { useCommands } from '@/hooks/useCommands'
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { X } from 'lucide-react';
+import { useCommands } from '@/hooks/useCommands';
 
 interface TerminalProps {
   language: 'en' | 'es'
