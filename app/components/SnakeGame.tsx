@@ -1,3 +1,5 @@
+"use client" // Add this line at the top
+
 import { useEffect, useState } from 'react'
 
 const SnakeGame = ({ onClose }: { onClose: () => void }) => {
