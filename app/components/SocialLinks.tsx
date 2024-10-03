@@ -1,4 +1,4 @@
-"use client" // Add this line at the top
+'use client'
 import { Download, Terminal as TerminalIcon, Gamepad2, Music, Linkedin, Twitter, Github, FileText, CalendarClock, Bot } from 'lucide-react'
 
 const SocialLinks = ({ generatePDF, toggleTerminal, toggleGame, toggleSpotify }: any) => (
