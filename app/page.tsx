@@ -1,44 +1,27 @@
 'use client'
+'use client'
 
 import { useState } from 'react'
-import { Linkedin, FileText, Twitter, Bot, Download, Github, CalendarClock, Terminal, Gamepad2, Music } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTerminal } from '../hooks/useTerminal'
 import ProfileCard from '../components/ProfileCard'
 import SocialLinks from '../components/SocialLinks'
-import TerminalWindow from '../components/TerminalWindow'
+import Terminal from '../components/Terminal'
 import SnakeGame from '../components/SnakeGame'
 import SpotifyTerminal from '../components/SpotifyTerminal'
 
 export default function Home() {
   const { language, toggleLanguage } = useLanguage()
   const { output, input, setInput, handleSubmit } = useTerminal(language)
-  const [isTerminalOpen, setIsTerminalOpen] = useState(false)
-  const [isGameOpen, setIsGameOpen] = useState(false)
-  const [isSpotifyOpen, setIsSpotifyOpen] = useState(false)
+  const [activeComponent, setActiveComponent] = useState<'main' | 'terminal' | 'game' | 'spotify'>('main')
 
-  const toggleTerminal = () => {
-    setIsTerminalOpen(prev => !prev)
-    setIsGameOpen(false)
-    setIsSpotifyOpen(false)
-  }
-
-  const toggleGame = () => {
-    setIsGameOpen(prev => !prev)
-    setIsTerminalOpen(false)
-    setIsSpotifyOpen(false)
-  }
-
-  const toggleSpotify = () => {
-    setIsSpotifyOpen(prev => !prev)
-    setIsTerminalOpen(false)
-    setIsGameOpen(false)
+  const toggleComponent = (component: 'main' | 'terminal' | 'game' | 'spotify') => {
+    setActiveComponent(component)
   }
 
   return (
-    <main className="min-h-screen bg-cover bg-center flex flex-col items-center p-4 sm:p-6 md:p-8 font-mono">
+    <main className="min-h-screen bg-cover bg-center flex flex-col items-center p-4 sm:p-6 md:p-8 font-mono"
+          style={{backgroundImage: "url('https://raw.githubusercontent.com/carcruz97/carcruz97/refs/heads/main/forest.png')"}}>
       <div className="w-full flex justify-end mb-4">
         <button 
           onClick={toggleLanguage} 
@@ -49,35 +32,35 @@ export default function Home() {
         </button>
       </div>
 
-      {!isTerminalOpen && !isGameOpen && !isSpotifyOpen && (
+      {activeComponent === 'main' && (
         <>
           <ProfileCard language={language} />
           <SocialLinks 
-            toggleTerminal={toggleTerminal}
-            toggleGame={toggleGame}
-            toggleSpotify={toggleSpotify}
+            toggleTerminal={() => toggleComponent('terminal')}
+            toggleGame={() => toggleComponent('game')}
+            toggleSpotify={() => toggleComponent('spotify')}
             language={language}
           />
         </>
       )}
       
-      {isTerminalOpen && (
-        <TerminalWindow 
+      {activeComponent === 'terminal' && (
+        <Terminal 
           output={output}
           input={input}
           setInput={setInput}
           handleSubmit={handleSubmit}
-          onClose={toggleTerminal}
+          onClose={() => toggleComponent('main')}
           language={language}
         />
       )}
 
-      {isGameOpen && (
-        <SnakeGame onClose={toggleGame} language={language} />
+      {activeComponent === 'game' && (
+        <SnakeGame onClose={() => toggleComponent('main')} language={language} />
       )}
 
-      {isSpotifyOpen && (
-        <SpotifyTerminal onClose={toggleSpotify} language={language} />
+      {activeComponent === 'spotify' && (
+        <SpotifyTerminal onClose={() => toggleComponent('main')} language={language} />
       )}
     </main>
   )
