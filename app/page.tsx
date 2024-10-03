@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import ProfileSection from '@/components/ProfileSection'
-import SocialLinks from '@/components/SocialLinks'
-import Terminal from '@/components/Terminal'
-import SnakeGame from '@/components/SnakeGame'
-import SpotifyTerminal from '@/components/SpotifyTerminal'
-import LanguageToggle from '@/components/LanguageToggle'
-import { useLanguage } from '@/hooks/useLanguage'
-import { usePDF } from '@/hooks/usePDF'
+import { useState } from 'react';
+import ProfileSection from '@/components/ProfileSection';
+import SocialLinks from '@/components/SocialLinks';
+import Terminal from '@/components/Terminal';
+import SnakeGame from '@/components/SnakeGame';
+import SpotifyTerminal from '@/components/SpotifyTerminal';
+import LanguageToggle from '@/components/LanguageToggle';
+import { useLanguage } from '@/hooks/useLanguage';
+import { usePDF } from '@/hooks/usePDF';
 
 export default function Portfolio() {
   const [isTerminalOpen, setIsTerminalOpen] = useState(false)
