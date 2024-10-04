@@ -1,4 +1,4 @@
-import 'globals.css'
+import './globals.css'; // If globals.css is in the same directory as layout.tsx
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
