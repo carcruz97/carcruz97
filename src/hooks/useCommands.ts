@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback } from 'react';
 
 export function useCommands(language: 'en' | 'es') {
   const commands = {
@@ -80,6 +80,14 @@ export function useCommands(language: 'en' | 'es') {
         output: "Guardando CV como PDF... ¡CV guardado con éxito! Puedes encontrarlo en tu carpeta de descargas."
       }
     }
-  }
+  };
 
-  const comma
+  // Use the language parameter to return the correct set of commands
+  const getCommands = useCallback(() => {
+    return Object.fromEntries(
+      Object.entries(commands).map(([key, value]) => [key, value[language]])
+    );
+  }, [language]);
+
+  return getCommands();
+}
