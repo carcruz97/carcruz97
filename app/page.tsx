@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Linkedin, FileText, Twitter, Bot, Download, Github, CalendarClock, Terminal, X, Gamepad2, Music } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
-import html2pdf from 'html2pdf.js'
+import dynamic from 'next/dynamic'
+
+const DynamicHtml2pdf = dynamic(() => import('html2pdf.js'), { ssr: false })
 
 // Flag components
 const Flag = ({ country }: { country: 'UK' | 'Spain' }) => {
@@ -33,7 +34,7 @@ const Flag = ({ country }: { country: 'UK' | 'Spain' }) => {
 }
 
 // Game component
-const SnakeGame = ({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
+const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
   const [snake, setSnake] = useState<number[][]>([[0, 0]])
   const [food, setFood] = useState<number[]>([2, 2])
   const [direction, setDirection] = useState<'UP' | 'DOWN' | 'LEFT' | 'RIGHT'>('RIGHT')
@@ -131,17 +132,17 @@ const SnakeGame = ({ onClose, language }: { onClose: () => void; language: 'en' 
           <X className="w-5 h-5" />
         </button>
       </div>
-      <div className="bg-black bg-opacity-30 text-white p-4 text-sm">
+      <div className="bg-black bg-opacity-30 text-white p-4 text-sm h-[400px] overflow-y-auto">
         <div className="mb-4">
           <p>{language === 'en' ? 'Level' : 'Nivel'}: {level}</p>
           <p>{language === 'en' ? 'Score' : 'Puntuación'}: {score}</p>
         </div>
-        <div className="grid grid-cols-5 gap-1 mb-4">
+        <div className="grid grid-cols-5 gap-1 mb-4 aspect-square">
           {Array(5).fill(null).map((_, rowIndex) => (
             Array(5).fill(null).map((_, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
-                className={`w-full pb-[100%] relative ${
+                className={`aspect-square ${
                   snake.some(([r, c]) => r === rowIndex && c === colIndex)
                     ? 'bg-green-500'
                     : food[0] === rowIndex && food[1] === colIndex
@@ -166,10 +167,10 @@ const SnakeGame = ({ onClose, language }: { onClose: () => void; language: 'en' 
       </div>
     </div>
   )
-}
+}), { ssr: false })
 
 // Spotify Terminal component
-const SpotifyTerminal = ({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
+const SpotifyTerminal = dynamic(() => Promise.resolve(({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
   const [currentSong] = useState("Bohemian Rhapsody - Queen")
 
   return (
@@ -191,7 +192,7 @@ const SpotifyTerminal = ({ onClose, language }: { onClose: () => void; language:
           <X className="w-5 h-5" />
         </button>
       </div>
-      <div className="bg-black bg-opacity-30 text-white p-4 text-sm">
+      <div className="bg-black bg-opacity-30 text-white p-4 text-sm h-[400px] overflow-y-auto">
         <h2 className="text-lg font-bold mb-2">{language === 'en' ? 'Sound Processing Techniques' : 'Técnicas de Procesamiento de Sonido'}</h2>
         <h3 className="text-md font-semibold mb-1">Kalman Filter</h3>
         <p className="mb-2">
@@ -219,7 +220,7 @@ const SpotifyTerminal = ({ onClose, language }: { onClose: () => void; language:
       </div>
     </div>
   )
-}
+}), { ssr: false })
 
 // Main component
 export default function Portfolio() {
@@ -413,8 +414,8 @@ export default function Portfolio() {
   }, [])
 
   const generatePDF = useCallback(() => {
-    if (cvRef.current) {
-      html2pdf().from(cvRef.current).save(`cv_${language}.pdf`)
+    if (cvRef.current && typeof window !== 'undefined') {
+      DynamicHtml2pdf().from(cvRef.current).save(`cv_${language}.pdf`)
     }
   }, [language])
 
