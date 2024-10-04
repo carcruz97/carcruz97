@@ -5,7 +5,10 @@ import { Linkedin, FileText, Twitter, Bot, Download, Github, CalendarClock, Term
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
-const DynamicHtml2pdf = dynamic(() => import('html2pdf.js'), { ssr: false })
+const DynamicHtml2pdf = dynamic(() => import('html2pdf.js'), { 
+  ssr: false,
+  loading: () => <p>Loading PDF generator...</p>
+})
 
 // Flag components
 const Flag = ({ country }: { country: 'UK' | 'Spain' }) => {
@@ -415,7 +418,8 @@ export default function Portfolio() {
 
   const generatePDF = useCallback(() => {
     if (cvRef.current && typeof window !== 'undefined') {
-      DynamicHtml2pdf().from(cvRef.current).save(`cv_${language}.pdf`)
+      const html2pdf = DynamicHtml2pdf as any;
+      html2pdf().from(cvRef.current).save(`cv_${language}.pdf`)
     }
   }, [language])
 
