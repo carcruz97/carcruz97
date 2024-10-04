@@ -1,27 +1,27 @@
 {
   "compilerOptions": {
-    "target": "es5", // Specify ECMAScript target version
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext" // Include all necessary libraries
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
     ],
-    "allowJs": true, // Allow JavaScript files to be compiled
-    "skipLibCheck": true, // Skip type checking of declaration files
-    "strict": true, // Enable all strict type-checking options
-    "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
-    "noEmit": true, // Do not emit output (useful for Next.js)
-    "esModuleInterop": true, // Enable emit interoperability between CommonJS and ES Modules
-    "module": "esnext", // Specify module code generation
-    "moduleResolution": "node", // Use Node.js style module resolution
-    "resolveJsonModule": true, // Include modules imported with .json extension
-    "isolatedModules": true, // Ensure each file can be safely transpiled
-    "jsx": "preserve" // Keep JSX syntax for Next.js
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
-  "include": [
-    "app/**/*" // Include all files in the app directory
-  ],
-  "exclude": [
-    "node_modules" // Exclude the node_modules directory
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
