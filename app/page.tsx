@@ -3,12 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Linkedin, FileText, Twitter, Bot, Download, Github, CalendarClock, Terminal, X, Gamepad2, Music } from 'lucide-react'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-
-const DynamicHtml2pdf = dynamic(() => import('html2pdf.js'), { 
-  ssr: false,
-  loading: () => <p>Loading PDF generator...</p>
-})
+import { motion, AnimatePresence } from 'framer-motion'
 
 // Flag components
 const Flag = ({ country }: { country: 'UK' | 'Spain' }) => {
@@ -37,9 +32,9 @@ const Flag = ({ country }: { country: 'UK' | 'Spain' }) => {
 }
 
 // Game component
-const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
+const SnakeGame = ({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
   const [snake, setSnake] = useState<number[][]>([[0, 0]])
-  const [food, setFood] = useState<number[]>([2, 2])
+  const [food, setFood] = useState<number[]>([5, 5])
   const [direction, setDirection] = useState<'UP' | 'DOWN' | 'LEFT' | 'RIGHT'>('RIGHT')
   const [gameOver, setGameOver] = useState(false)
   const [level, setLevel] = useState(1)
@@ -71,16 +66,16 @@ const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClos
         const head = [...newSnake[0]]
 
         const movements = {
-          UP: () => head[0] = (head[0] - 1 + 5) % 5,
-          DOWN: () => head[0] = (head[0] + 1) % 5,
-          LEFT: () => head[1] = (head[1] - 1 + 5) % 5,
-          RIGHT: () => head[1] = (head[1] + 1) % 5
+          UP: () => head[0] = (head[0] - 1 + 10) % 10,
+          DOWN: () => head[0] = (head[0] + 1) % 10,
+          LEFT: () => head[1] = (head[1] - 1 + 10) % 10,
+          RIGHT: () => head[1] = (head[1] + 1) % 10
         }
 
         movements[direction]()
 
         if (head[0] === food[0] && head[1] === food[1]) {
-          setFood([Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)])
+          setFood([Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)])
           setScore(prevScore => {
             const newScore = prevScore + 1
             if (newScore % 5 === 0 && level < 3) {
@@ -107,7 +102,7 @@ const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClos
 
   const resetGame = () => {
     setSnake([[0, 0]])
-    setFood([2, 2])
+    setFood([5, 5])
     setDirection('RIGHT')
     setGameOver(false)
     setLevel(1)
@@ -136,13 +131,13 @@ const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClos
         </button>
       </div>
       <div className="bg-black bg-opacity-30 text-white p-4 text-sm h-[400px] overflow-y-auto">
-        <div className="mb-4">
+        <div className="mb-4 text-center">
           <p>{language === 'en' ? 'Level' : 'Nivel'}: {level}</p>
           <p>{language === 'en' ? 'Score' : 'Puntuación'}: {score}</p>
         </div>
-        <div className="grid grid-cols-5 gap-1 mb-4 aspect-square">
-          {Array(5).fill(null).map((_, rowIndex) => (
-            Array(5).fill(null).map((_, colIndex) => (
+        <div className="grid grid-cols-10 gap-1 aspect-square w-full max-w-[300px] mx-auto">
+          {Array(10).fill(null).map((_, rowIndex) => (
+            Array(10).fill(null).map((_, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
                 className={`aspect-square ${
@@ -157,11 +152,11 @@ const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClos
           ))}
         </div>
         {gameOver && (
-          <div className="text-center">
+          <div className="text-center mt-4">
             <p className="mb-2">{language === 'en' ? 'Game Over!' : '¡Juego Terminado!'}</p>
             <button
               onClick={resetGame}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm"
             >
               {language === 'en' ? 'Play Again' : 'Jugar de Nuevo'}
             </button>
@@ -170,10 +165,10 @@ const SnakeGame = dynamic(() => Promise.resolve(({ onClose, language }: { onClos
       </div>
     </div>
   )
-}), { ssr: false })
+}
 
 // Spotify Terminal component
-const SpotifyTerminal = dynamic(() => Promise.resolve(({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
+const SpotifyTerminal = ({ onClose, language }: { onClose: () => void; language: 'en' | 'es' }) => {
   const [currentSong] = useState("Bohemian Rhapsody - Queen")
 
   return (
@@ -223,16 +218,14 @@ const SpotifyTerminal = dynamic(() => Promise.resolve(({ onClose, language }: { 
       </div>
     </div>
   )
-}), { ssr: false })
+}
 
 // Main component
 export default function Portfolio() {
   const [output, setOutput] = useState<string[]>([])
   const [input, setInput] = useState('')
   const [language, setLanguage] = useState<'en' | 'es'>('en')
-  const [isTerminalOpen, setIsTerminalOpen] = useState(false)
-  const [isGameOpen, setIsGameOpen] = useState(false)
-  const [isSpotifyOpen, setIsSpotifyOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState<'main' | 'terminal' | 'game' | 'spotify'>('main')
   const inputRef = useRef<HTMLInputElement>(null)
   const terminalRef = useRef<HTMLDivElement>(null)
   const cvRef = useRef<HTMLDivElement>(null)
@@ -286,7 +279,7 @@ export default function Portfolio() {
         command: "proyectos",
         output: `
     1. API de Análisis de Sentimientos: Construí una API escalable para el análisis de sentimientos en tiempo real de publicaciones en redes sociales.
-    2. Sistema de Detección de Objetos: Desarrollé un sistema de visión por computadora para vehículos autónomos utilizando la arquitectura YOLO.
+    2. Sistema de Detección de Objetos: Desarroll un sistema de visión por computadora para vehículos autónomos utilizando la arquitectura YOLO.
     3. Marco de Chatbot: Creé un marco flexible para construir chatbots de dominio específico utilizando modelos de transformadores.
         `
       }
@@ -398,189 +391,210 @@ export default function Portfolio() {
 
   const toggleLanguage = useCallback(() => setLanguage(prev => prev === 'en' ? 'es' : 'en'), [])
 
-  const toggleTerminal = useCallback(() => {
-    setIsTerminalOpen(prev => !prev)
-    setIsGameOpen(false)
-    setIsSpotifyOpen(false)
-  }, [])
-
-  const toggleGame = useCallback(() => {
-    setIsGameOpen(prev => !prev)
-    setIsTerminalOpen(false)
-    setIsSpotifyOpen(false)
-  }, [])
-
-  const toggleSpotify = useCallback(() => {
-    setIsSpotifyOpen(prev => !prev)
-    setIsTerminalOpen(false)
-    setIsGameOpen(false)
+  const toggleSection = useCallback((section: 'main' | 'terminal' | 'game' | 'spotify') => {
+    setActiveSection(prev => prev === section ? 'main' : section)
   }, [])
 
   const generatePDF = useCallback(() => {
     if (cvRef.current && typeof window !== 'undefined') {
-      const html2pdf = DynamicHtml2pdf as any;
-      html2pdf().from(cvRef.current).save(`cv_${language}.pdf`)
+      import('html2pdf.js').then(html2pdf => {
+        html2pdf.default().from(cvRef.current).save(`cv_${language}.pdf`)
+      }).catch(err => console.error('Error loading html2pdf:', err))
     }
   }, [language])
 
   return (
     <div 
-      className="min-h-screen bg-cover bg-center flex flex-col items-center p-4 sm:p-6 md:p-8 font-mono"
+      className="min-h-screen bg-cover bg-center flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 font-mono relative"
       style={{
         backgroundImage: "url('http://raw.githubusercontent.com/carcruz97/carcruz97/refs/heads/main/forest.png')"
       }}
     >
-      <div className="w-full flex justify-end mb-4">
+      <div className="absolute top-4 right-4">
         <button 
           onClick={toggleLanguage} 
           className="bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20 p-2 text-white hover:text-green-400 transition-colors"
           aria-label={language === 'en' ? "Switch to Spanish" : "Cambiar a Inglés"}
         >
-          <Flag country={language === 'en' ? 'Spain' : 'UK'} />
+          <Flag country={language === 'en' ? 'UK' : 'Spain'} />
         </button>
       </div>
 
-      {!isTerminalOpen && !isGameOpen && !isSpotifyOpen && (
-        <>
-          <div className="w-full max-w-md mx-auto bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20 mb-4">
-            <div className="flex items-center justify-center p-4">
-              <div 
-                className="w-24 h-24 rounded-full bg-cover bg-center"
-                style={{
-                  backgroundImage: "url('http://raw.githubusercontent.com/carcruz97/carcruz97/refs/heads/main/perfil.png')"
-                }}
-              />
-            </div>
-            <div className="text-center text-white p-4">
-              <h1 className="text-2xl font-bold mb-2">Carmen Cruzado</h1>
-              <p className="text-lg">{language === 'en' ? 'Machine Learning Engineer' : 'Ingeniera de Aprendizaje Automático'}</p>
-            </div>
-          </div>
-          
-          <div className="w-full max-w-md mx-auto bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20 p-2 sm:p-3 md:p-4">
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-              <Link href="https://www.linkedin.com/in/carmen-cruzado/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors">
-                <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="sr-only">LinkedIn</span>
-              </Link>
-              <Link href="https://medium.com/@carcruz97" target="_blank" rel="noopener noreferrer" className="text-white hover:text-green-400 transition-colors">
-                <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="sr-only">Medium</span>
-              </Link>
-              <Link href="https://x.com/carcruz97" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-300 transition-colors">
-                <Twitter className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="sr-only">Twitter</span>
-              </Link>
-              <Link href="https://replicate.com/carcruz97" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-400 transition-colors">
-                <Bot className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="sr-only">Replicate</span>
-              </Link>
-              <Link href="https://calendly.com/carmencruzado97/data-ai" target="_blank" rel="noopener noreferrer" className="text-white hover:text-green-400 transition-colors">
-                <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="sr-only">Calendar</span>
-              </Link>
-              <Link href="https://github.com/carcruz97/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400 transition-colors">
-                <Github className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="sr-only">GitHub</span>
-              </Link>
-              <button 
-                onClick={generatePDF} 
-                className="text-white hover:text-yellow-400 transition-colors"
-                aria-label={language === 'en' ? "Download CV" : "Descargar CV"}
-              >
-                <Download className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-              <button
-                onClick={toggleTerminal}
-                className="text-white hover:text-cyan-400 transition-colors"
-                aria-label={language === 'en' ? "Open Terminal" : "Abrir Terminal"}
-              >
-                <Terminal className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-              <button
-                onClick={toggleGame}
-                className="text-white hover:text-purple-400 transition-colors"
-                aria-label={language === 'en' ? "Play Snake Game" : "Jugar Snake"}
-              >
-                <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-              <button
-                onClick={toggleSpotify}
-                className="text-white hover:text-green-400 transition-colors"
-                aria-label={language === 'en' ? "Open Spotify Terminal" : "Abrir Terminal de Spotify"}
-              >
-                <Music className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-      
-      {isTerminalOpen && (
-        <div className="w-full max-w-md mx-auto bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20">
-          <div className="bg-black bg-opacity-30 p-2 flex items-center">
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            </div>
-            <div className="flex-grow text-center">
-              <span className="text-sm text-white font-medium">The Carmen's Forest</span>
-            </div>
-            <button
-              onClick={toggleTerminal}
-              className="text-white hover:text-red-400 transition-colors"
-              aria-label={language === 'en' ? "Close Terminal" : "Cerrar Terminal"}
+      <div className="w-full max-w-md mx-auto">
+        <AnimatePresence mode="wait">
+          {activeSection === 'main' && (
+            <motion.div
+              key="main"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
             >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="bg-black bg-opacity-30 text-white p-2 sm:p-3 md:p-4 text-xs sm:text-sm">
-            {welcomeMessage[language] && welcomeMessage[language].map((line, index) => (
-              <div key={index} className="mb-1 sm:mb-2 font-bold text-shadow">
-                {line}
+              <div className="bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20 mb-4">
+                <div className="flex items-center p-4">
+                  <div 
+                    className="w-24 h-24 rounded-full bg-cover bg-center mr-4 flex-shrink-0"
+                    style={{
+                      backgroundImage: "url('http://raw.githubusercontent.com/carcruz97/carcruz97/refs/heads/main/perfil.png')"
+                    }}
+                    aria-label="Profile photo of Carmen Cruzado"
+                  />
+                  <div className="text-white">
+                    <h1 className="text-2xl font-bold mb-2">Carmen Cruzado</h1>
+                    <p className="text-lg">{language === 'en' ? 'Machine Learning Engineer' : 'Ingeniera de Aprendizaje Automático'}</p>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-          <div 
-            ref={terminalRef}
-            className="bg-black bg-opacity-30 text-white p-2 sm:p-3 md:p-4 text-xs sm:text-sm h-64 sm:h-80 md:h-96 overflow-y-auto"
-          >
-            {output.map((line, index) => (
-              <div key={index} className="mb-1 sm:mb-2 font-bold text-shadow">
-                {line}
+              
+              <div className="bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20 p-2 sm:p-3 md:p-4">
+                <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+                  <Link href="https://www.linkedin.com/in/carmen-cruzado/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors">
+                    <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="sr-only">LinkedIn</span>
+                  </Link>
+                  <Link href="https://medium.com/@carcruz97" target="_blank" rel="noopener noreferrer" className="text-white hover:text-green-400 transition-colors">
+                    <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="sr-only">Medium</span>
+                  </Link>
+                  <Link href="https://x.com/carcruz97" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-300 transition-colors">
+                    <Twitter className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="sr-only">Twitter</span>
+                  </Link>
+                  <Link href="https://replicate.com/carcruz97" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-400 transition-colors">
+                    <Bot className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="sr-only">Replicate</span>
+                  </Link>
+                  <Link href="https://calendly.com/carmencruzado97/data-ai" target="_blank" rel="noopener noreferrer" className="text-white hover:text-green-400 transition-colors">
+                    <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="sr-only">Calendar</span>
+                  </Link>
+                  <Link href="https://github.com/carcruz97/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400 transition-colors">
+                    <Github className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="sr-only">GitHub</span>
+                  </Link>
+                  <button 
+                    onClick={generatePDF} 
+                    className="text-white hover:text-yellow-400 transition-colors"
+                    aria-label={language === 'en' ? "Download CV" : "Descargar CV"}
+                  >
+                    <Download className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                  <button
+                    onClick={() => toggleSection('terminal')}
+                    className="text-white hover:text-cyan-400 transition-colors"
+                    aria-label={language === 'en' ? "Open Terminal" : "Abrir Terminal"}
+                  >
+                    <Terminal className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                  <button
+                    onClick={() => toggleSection('game')}
+                    className="text-white hover:text-purple-400 transition-colors"
+                    aria-label={language === 'en' ? "Play Snake Game" : "Jugar Snake"}
+                  >
+                    <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                  <button
+                    onClick={() => toggleSection('spotify')}
+                    className="text-white hover:text-green-400 transition-colors"
+                    aria-label={language === 'en' ? "Open Spotify Terminal" : "Abrir Terminal de Spotify"}
+                  >
+                    <Music className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                </div>
               </div>
-            ))}
-            <form onSubmit={handleSubmit} className="flex items-center mt-2">
-              <span className="mr-2 font-bold text-shadow">$</span>
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="flex-grow bg-transparent outline-none font-bold text-shadow"
-                autoFocus
-                ref={inputRef}
-                aria-label={language === 'en' ? "Enter command" : "Ingrese el comando"}
-              />
-            </form>
-          </div>
+            </motion.div>
+          )}
+          
+          {activeSection === 'terminal' && (
+            <motion.div
+              key="terminal"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden border border-white border-opacity-20"
+            >
+              <div className="bg-black bg-opacity-30 p-2 flex items-center">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <div className="flex-grow text-center">
+                  <span className="text-sm text-white font-medium">The Carmen's Forest</span>
+                </div>
+                <button
+                  onClick={() => toggleSection('main')}
+                  className="text-white hover:text-red-400 transition-colors"
+                  aria-label={language === 'en' ? "Close Terminal" : "Cerrar Terminal"}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="bg-black bg-opacity-30 text-white p-2 sm:p-3 md:p-4 text-xs sm:text-sm">
+                {welcomeMessage[language] && welcomeMessage[language].map((line, index) => (
+                  <div key={index} className="mb-1 sm:mb-2 font-bold text-shadow">
+                    {line}
+                  </div>
+                ))}
+              </div>
+              <div 
+                ref={terminalRef}
+                className="bg-black bg-opacity-30 text-white p-2 sm:p-3 md:p-4 text-xs sm:text-sm h-64 sm:h-80 md:h-96 overflow-y-auto"
+              >
+                {output.map((line, index) => (
+                  <div key={index} className="mb-1 sm:mb-2 font-bold text-shadow">
+                    {line}
+                  </div>
+                ))}
+                <form onSubmit={handleSubmit} className="flex items-center mt-2">
+                  <span className="mr-2 font-bold text-shadow">$</span>
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="flex-grow bg-transparent outline-none font-bold text-shadow"
+                    autoFocus
+                    ref={inputRef}
+                    aria-label={language === 'en' ? "Enter command" : "Ingrese el comando"}
+                  />
+                </form>
+              </div>
+            </motion.div>
+          )}
+
+          {activeSection === 'game' && (
+            <motion.div
+              key="game"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SnakeGame onClose={() => toggleSection('main')} language={language} />
+            </motion.div>
+          )}
+
+          {activeSection === 'spotify' && (
+            <motion.div
+              key="spotify"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SpotifyTerminal onClose={() => toggleSection('main')} language={language} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Hidden CV content for PDF generation */}
+        <div className="hidden" ref={cvRef}>
+          <h2>{cvData[language].name}</h2>
+          <p>{cvData[language].title}</p>
+          <p>{cvData[language].experience}</p>
+          <p>{cvData[language].education}</p>
         </div>
-      )}
-
-      {isGameOpen && (
-        <SnakeGame onClose={toggleGame} language={language} />
-      )}
-
-      {isSpotifyOpen && (
-        <SpotifyTerminal onClose={toggleSpotify} language={language} />
-      )}
-
-      {/* Hidden CV content for PDF generation */}
-      <div className="hidden" ref={cvRef}>
-        <h2>{cvData[language].name}</h2>
-        <p>{cvData[language].title}</p>
-        <p>{cvData[language].experience}</p>
-        <p>{cvData[language].education}</p>
       </div>
     </div>
   )
