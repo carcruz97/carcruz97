@@ -279,7 +279,7 @@ export default function Portfolio() {
         command: "proyectos",
         output: `
     1. API de Análisis de Sentimientos: Construí una API escalable para el análisis de sentimientos en tiempo real de publicaciones en redes sociales.
-    2. Sistema de Detección de Objetos: Desarroll un sistema de visión por computadora para vehículos autónomos utilizando la arquitectura YOLO.
+    2. Sistema de Detección de Objetos: Desarrollé un sistema de visión por computadora para vehículos autónomos utilizando la arquitectura YOLO.
     3. Marco de Chatbot: Creé un marco flexible para construir chatbots de dominio específico utilizando modelos de transformadores.
         `
       }
