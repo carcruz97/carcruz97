@@ -16,11 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-forest`}>
-        <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
-          {children}
-        </main>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
