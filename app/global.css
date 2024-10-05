@@ -16,25 +16,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 .text-shadow {
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-
-.bg-forest {
-  background-image: url('http://raw.githubusercontent.com/carcruz97/carcruz97/refs/heads/main/forest.png');
-  background-size: cover;
-  background-position: center;
-}
-
-.backdrop-blur {
-  backdrop-filter: blur(8px);
-}
-
-.border-white-20 {
-  border-color: rgba(255, 255, 255, 0.2);
 }
