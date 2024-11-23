@@ -55,8 +55,8 @@ graph LR
 
 I'm always interested in collaborating on innovative AI projects or discussing the latest tech trends. Feel free to reach out!
 
----
 
-⚡ Fun fact: I started my career in Chemical Engineering before diving into the world of AI and Machine Learning!
+##⚡ Fun fact
+I've ventured through quite a mix of fields—starting with Plastic Arts, then Environment and Voice Over. Before the pandemic, I even hosted a Green Science podcast, moved on to Chemical Engineering, and now I'm diving into AI and Machine Learning!
 
 ![Profile Views](https://komarev.com/ghpvc/?username=YourGitHubUsername&color=brightgreen)
