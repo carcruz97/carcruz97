@@ -57,6 +57,6 @@ I'm always interested in collaborating on innovative AI projects or discussing t
 
 
 ## Fun fact ⚡
-I've ventured through quite a mix of fields—starting with Plastic Arts, then Environment and Voice Over. Before the pandemic, I even hosted a Green Science podcast, and now I'm diving into AI and Machine Learning!
+I've ventured through quite a mix of fields—starting with Plastic Arts, then Environment and Voice Over. Before the pandemic, I even hosted a Green Science podcast, and now I'm diving into the exciting world of AI and Machine Learning!
 
 ![Profile Views](https://komarev.com/ghpvc/?username=YourGitHubUsername&color=brightgreen)
