@@ -7,14 +7,14 @@
 
 The pandemic turned me into a Python Developer, my first corporate role evolved me into a Data Scientist, and the freelance world shaped me into an AI Software Developer. I'm essentially a trendy programmer who pieces together models from academic papers and GitHub repositories!
 
-### What I Do 💻
+## What I Do 💻
 
 - 🤖 AI & ML Engineer specialized in Computer Vision and GenAI
 - 🌱 Helping startups grow through SOTA tech solutions
 - 📊 Experienced in Credit Scoring and NLP
 - 🛠️ MLOps enthusiast
 
-### Tech Stack 🔧
+## Tech Stack 🔧
 
 ```python
 tech_stack = {
@@ -26,14 +26,14 @@ tech_stack = {
 }
 ```
 
-### Recent Projects 🎯
+## Recent Projects 🎯
 
 - 🌾 Developed credit scoring models for Agro-Fintech
 - 💰 Built a Gemini-based categorization engine for personal finance
 - 🏠 Created AI models for virtual staging and room scaling
 - 📄 Implemented intelligent document extraction systems
 
-### Beyond Code 🌟
+## Beyond Code 🌟
 
 When I'm not coding, you'll find me:
 - 🚴‍♀️ Cycling around the city
@@ -41,7 +41,7 @@ When I'm not coding, you'll find me:
 - 💪 Crushing CrossFit workouts
 - 🌍 Meeting new people at Mundo Lingo events
 
-### Professional Journey 📈
+## Professional Journey 📈
 
 ```mermaid
 graph LR
@@ -51,7 +51,7 @@ graph LR
     C --> D[Freelance AI Consultant]
 ```
 
-### Let's Connect! 🤝
+## Let's Connect! 🤝
 
 I'm always interested in collaborating on innovative AI projects or discussing the latest tech trends. Feel free to reach out!
 
