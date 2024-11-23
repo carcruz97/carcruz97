@@ -44,7 +44,6 @@ When I'm not coding, you'll find me:
 ### Professional Journey 📈
 
 ```mermaid
-graph LR
     A[Python Developer] --> B[Data Scientist]
     B --> C[AI Software Developer]
     C --> D[Freelance AI Consultant]
