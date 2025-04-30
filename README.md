@@ -49,8 +49,9 @@ When I'm not coding, you'll find me:
 graph LR
 
     A[Python Developer] --> B[Data Scientist]
-    B --> C[AI Software Developer]
-    C --> D[Freelance AI Consultant]
+    B --> C[Machine Learning Engineer]
+    C --> D[AI Software Developer]
+    D --> E[AI Solutions Architect]
 ```
 
 ## Let's Connect! 🤝
