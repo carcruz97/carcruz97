@@ -7,7 +7,7 @@
 
 ## About Me 🚀
 
-The pandemic turned me into a Python Developer, my first corporate role evolved me into a Data Scientist, and the freelance world shaped me into an AI Software Developer. I'm essentially a trendy programmer who pieces together models from academic papers and GitHub repositories!
+The pandemic turned me into a Python Developer, my first corporate role evolved me into a Data Scientist, and the freelance world shaped me into an AI Solutions Architect. I'm essentially a trendy programmer who pieces together models from academic papers and GitHub repositories!
 
 ## What I Do 💻
 
