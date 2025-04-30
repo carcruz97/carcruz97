@@ -50,8 +50,7 @@ graph LR
 
     A[Python Developer] --> B[Data Scientist]
     B --> C[Machine Learning Engineer]
-    C --> D[AI Software Developer]
-    D --> E[AI Solutions Architect]
+    C --> D[AI Solutions Architect]
 ```
 
 ## Let's Connect! 🤝
